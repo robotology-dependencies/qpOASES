@@ -5,10 +5,7 @@ find_package(Matlab	 REQUIRED
                      ENG_LIBRARY)
 
 if(Matlab_FOUND)
-     message("Matlab libraries found: ${Matlab_LIBRARIES}")
-     message("Matlab mex library: " ${Matlab_MEX_LIBRARY})
-     message("Matlab mx  library: " ${Matlab_MX_LIBRARY})
-     message("Matlab ENG library: " ${Matlab_ENG_LIBRARY})
+     message(STATUS "Matlab found")
 else()
      message(FATAL_ERROR "Matlab not found")
 endif()
