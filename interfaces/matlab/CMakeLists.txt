@@ -21,30 +21,44 @@ include_directories(SYSTEM ${Matlab_INCLUDE_DIRS})
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/mex)
 
-matlab_add_mex(
-         NAME ${PROJECT_NAME}
-         SRC qpOASES.cpp
-         OUTPUT_NAME qpOASES
-         LINK_TO qpOASES
-     )
+if (CMAKE_VERSION GREATER 3.0.2)
+    matlab_add_mex(
+             NAME ${PROJECT_NAME}
+             SRC qpOASES.cpp
+             OUTPUT_NAME qpOASES
+             LINK_TO qpOASES
+         )
+     
+     # add_library(${PROJECT_NAME} ${LIBRARY_TYPE} qpOASES.cpp)
+     # target_link_libraries(${PROJECT_NAME} ${Matlab_MEX_LIBRARY} ${Matlab_MX_LIBRARY}
+     #                                       ${Matlab_ENG_LIBRARY} qpOASES)
+          
+     matlab_add_mex(
+              NAME ${PROJECT_NAME}_sequence
+              SRC qpOASES_sequence.cpp
+              OUTPUT_NAME qpOASES_sequence
+              LINK_TO qpOASES
+          )                                  
+               
+else()
 
-
-# add_library(${PROJECT_NAME} ${LIBRARY_TYPE} qpOASES.cpp)
-# target_link_libraries(${PROJECT_NAME} ${Matlab_MEX_LIBRARY} ${Matlab_MX_LIBRARY}
-#                                       ${Matlab_ENG_LIBRARY} qpOASES)
+    add_library(${PROJECT_NAME} ${LIBRARY_TYPE} qpOASES.cpp)
+    target_link_libraries(${PROJECT_NAME} ${Matlab_MEX_LIBRARY} ${Matlab_MX_LIBRARY}
+                                          ${Matlab_ENG_LIBRARY} qpOASES)
                                       
-add_library(${PROJECT_NAME}_sequence ${LIBRARY_TYPE} qpOASES_sequence.cpp)
-target_link_libraries(${PROJECT_NAME}_sequence ${Matlab_MEX_LIBRARY} ${Matlab_MX_LIBRARY} 
-                                    ${Matlab_ENG_LIBRARY} qpOASES)
+    add_library(${PROJECT_NAME}_sequence ${LIBRARY_TYPE} qpOASES_sequence.cpp)
+    target_link_libraries(${PROJECT_NAME}_sequence ${Matlab_MEX_LIBRARY} ${Matlab_MX_LIBRARY} 
+                                        ${Matlab_ENG_LIBRARY} qpOASES)
 
-# set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .${Matlab_MEX_EXTENSION})
-# set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
-# set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "qpOASES")
+    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX .${Matlab_MEX_EXTENSION})
+    set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "qpOASES")
 
-set_target_properties(${PROJECT_NAME}_sequence PROPERTIES SUFFIX .${Matlab_MEX_EXTENSION})
-set_target_properties(${PROJECT_NAME}_sequence PROPERTIES PREFIX "")
-set_target_properties(${PROJECT_NAME}_sequence PROPERTIES OUTPUT_NAME "qpOASES_sequence")
+    set_target_properties(${PROJECT_NAME}_sequence PROPERTIES SUFFIX .${Matlab_MEX_EXTENSION})
+    set_target_properties(${PROJECT_NAME}_sequence PROPERTIES PREFIX "")
+    set_target_properties(${PROJECT_NAME}_sequence PROPERTIES OUTPUT_NAME "qpOASES_sequence")
 
+endif()
 
 set(MATLAB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/qpOASES.m
                 ${CMAKE_CURRENT_SOURCE_DIR}/qpOASES_options.m 
@@ -63,12 +77,13 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION mex
   RUNTIME DESTINATION mex
 )
+
 set_target_properties(
     ${PROJECT_NAME}
     PROPERTIES
     SOVERSION ${PACKAGE_SO_VERSION}
     )
-    
+
 install(TARGETS ${PROJECT_NAME}_sequence
   LIBRARY DESTINATION mex
   ARCHIVE DESTINATION mex
@@ -79,5 +94,6 @@ set_target_properties(
     PROPERTIES
     SOVERSION ${PACKAGE_SO_VERSION}
     )
+
     
 install(FILES ${MATLAB_SRCS} DESTINATION bin)
