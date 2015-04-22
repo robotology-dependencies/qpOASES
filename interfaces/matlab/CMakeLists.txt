@@ -29,10 +29,6 @@ if (CMAKE_VERSION GREATER 3.0.2)
              LINK_TO qpOASES
          )
      
-     # add_library(${PROJECT_NAME} ${LIBRARY_TYPE} qpOASES.cpp)
-     # target_link_libraries(${PROJECT_NAME} ${Matlab_MEX_LIBRARY} ${Matlab_MX_LIBRARY}
-     #                                       ${Matlab_ENG_LIBRARY} qpOASES)
-          
      matlab_add_mex(
               NAME ${PROJECT_NAME}_sequence
               SRC qpOASES_sequence.cpp
