@@ -2,7 +2,7 @@
 ##  This file is part of qpOASES.
 ##
 ##  qpOASES -- An Implementation of the Online Active Set Strategy.
-##  Copyright (C) 2007-2015 by Hans Joachim Ferreau, Andreas Potschka,
+##  Copyright (C) 2007-2017 by Hans Joachim Ferreau, Andreas Potschka,
 ##  Christian Kirches et al. All rights reserved.
 ##
 ##  qpOASES is free software; you can redistribute it and/or
@@ -23,13 +23,14 @@
 ##
 ##    Filename:  qpoases.pxd
 ##    Author:    Sebastian F. Walter, Manuel Kudruss
-##    Version:   3.1
-##    Date:      2013-2015
+##    Version:   3.2
+##    Date:      2013-2017
 ##
 
 cdef extern from "qpOASES.hpp" namespace "qpOASES":
 
     ctypedef double real_t
+    ctypedef int int_t
 
     cdef enum BooleanType:
 
@@ -232,6 +233,10 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
         RET_NO_DIAGONAL_AVAILABLE
         RET_DIAGONAL_NOT_INITIALISED
         RET_ENSURELI_DROPPED
+        RET_KKT_MATRIX_SINGULAR
+        RET_QR_FACTORISATION_FAILED
+        RET_INERTIA_CORRECTION_FAILED
+        RET_NO_SPARSE_SOLVER
         RET_SIMPLE_STATUS_P1
         RET_SIMPLE_STATUS_P0
         RET_SIMPLE_STATUS_M1
@@ -260,8 +265,8 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
         BooleanType enableRegularisation
         BooleanType enableFullLITests
         BooleanType enableNZCTests
-        int         enableDriftCorrection
-        int         enableCholeskyRefactorisation
+        int_t       enableDriftCorrection
+        int_t       enableCholeskyRefactorisation
         BooleanType enableEqualities
 
         real_t terminationTolerance
@@ -278,21 +283,24 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
         real_t growFarBounds
         SubjectToStatus initialStatusBounds
         real_t epsFlipping
-        int numRegularisationSteps
+        int_t numRegularisationSteps
         real_t epsRegularisation
-        int numRefinementSteps
+        int_t numRefinementSteps
         real_t epsIterRef
         real_t epsLITests
         real_t epsNZCTests
 
+        real_t rcondSMin
+        BooleanType enableInertiaCorrection
+
         BooleanType enableDropInfeasibles
-        int    dropBoundPriority
-        int    dropEqConPriority
-        int    dropIneqConPriority
+        int_t dropBoundPriority
+        int_t dropEqConPriority
+        int_t dropIneqConPriority
 
     cdef cppclass QProblemB:
         QProblemB()
-        QProblemB(int, HessianType)
+        QProblemB(int_t, HessianType)
 
         QProblemB(const QProblemB&)
 
@@ -300,24 +308,24 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                          real_t*,
                          real_t*,
                          real_t*,
-                         int&)
+                         int_t&)
 
         returnValue init(real_t*,
                          real_t*,
                          real_t*,
                          real_t*,
-                         int&,
+                         int_t&,
                          real_t*)
 
         returnValue hotstart(real_t*,
                              real_t*,
                              real_t*,
-                             int&)
+                             int_t&)
 
         returnValue hotstart(real_t*,
                              real_t*,
                              real_t*,
-                             int&,
+                             int_t&,
                              real_t*)
 
 
@@ -331,7 +339,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
 
     cdef cppclass QProblem:
         QProblem()
-        QProblem(int, int, HessianType)
+        QProblem(int_t, int_t, HessianType)
 
         QProblem(const QProblem&)
 
@@ -342,7 +350,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                          real_t*,
                          real_t*,
                          real_t*,
-                         int&)
+                         int_t&)
 
         returnValue init(real_t*,
                          real_t*,
@@ -351,7 +359,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                          real_t*,
                          real_t*,
                          real_t*,
-                         int&,
+                         int_t&,
                          real_t*)
 
         returnValue hotstart(real_t*,
@@ -359,14 +367,14 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                              real_t*,
                              real_t*,
                              real_t*,
-                             int&)
+                             int_t&)
 
         returnValue hotstart(real_t*,
                              real_t*,
                              real_t*,
                              real_t*,
                              real_t*,
-                             int&,
+                             int_t&,
                              real_t*)
 
         returnValue getPrimalSolution(real_t*)
@@ -380,7 +388,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
 
     cdef cppclass SQProblem:
         SQProblem()
-        SQProblem(int, int, HessianType)
+        SQProblem(int_t, int_t, HessianType)
 
         SQProblem(const QProblem&)
 
@@ -391,7 +399,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                          real_t*,
                          real_t*,
                          real_t*,
-                         int&)
+                         int_t&)
 
         returnValue init(real_t*,
                          real_t*,
@@ -400,7 +408,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                          real_t*,
                          real_t*,
                          real_t*,
-                         int&,
+                         int_t&,
                          real_t*)
 
         returnValue hotstart(real_t*,
@@ -410,7 +418,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                              real_t*,
                              real_t*,
                              real_t*,
-                             int&)
+                             int_t&)
 
         returnValue hotstart(real_t*,
                              real_t*,
@@ -419,7 +427,7 @@ cdef extern from "qpOASES.hpp" namespace "qpOASES":
                              real_t*,
                              real_t*,
                              real_t*,
-                             int&,
+                             int_t&,
                              real_t*)
 
         returnValue getPrimalSolution(real_t*)
@@ -436,9 +444,9 @@ cdef extern from "qpOASES/extras/SolutionAnalysis.hpp" namespace "qpOASES":
         SolutionAnalysis(const SolutionAnalysis&)
         # ~SolutionAnalysis()
         # SolutionAnalysis& operator=(const SolutionAnalysis&)
-        returnValue getKktViolation(const QProblem*,  const real_t*, const real_t*, const real_t*)
-        returnValue getKktViolation(const QProblemB*, const real_t*, const real_t*, const real_t*)
-        returnValue getKktViolation(const SQProblem*, const real_t*, const real_t*, const real_t*)
+        real_t getKktViolation(const QProblem*,  const real_t*, const real_t*, const real_t*)
+        real_t getKktViolation(const QProblemB*, const real_t*, const real_t*, const real_t*)
+        real_t getKktViolation(const SQProblem*, const real_t*, const real_t*, const real_t*)
         returnValue getVarianceCovariance(QProblem*, real_t*, real_t*)
         returnValue getVarianceCovariance(QProblemB*, real_t*, real_t*)
         returnValue getVarianceCovariance(SQProblem*, real_t*, real_t*)
@@ -446,25 +454,25 @@ cdef extern from "qpOASES/extras/SolutionAnalysis.hpp" namespace "qpOASES":
 
 cdef extern from "qpOASES/Utils.hpp" namespace "qpOASES":
     pass
-    #void getKKTResidual(int nV,                  # Number of variables.
-    #                    int nC,                  # Number of constraints.
-    #                    const real_t* const H,   # Hessian matrix.
-    #                    const real_t* const g,   # Sequence of gradient vectors.
-    #                    const real_t* const A,   # Constraint matrix.
-    #                    const real_t* const lb,  # Sequence of lower bound vectors (on variables).
-    #                    const real_t* const ub,  # Sequence of upper bound vectors (on variables).
-    #                    const real_t* const lbA, # Sequence of lower constraints' bound vectors.
-    #                    const real_t* const ubA, # Sequence of upper constraints' bound vectors.
-    #                    const real_t* const x,   # Sequence of primal trial vectors.
-    #                    const real_t* const y,   # Sequence of dual trial vectors.
-    #                    real_t& stat,            # Maximum value of stationarity condition residual.
-    #                    real_t& feas,            # Maximum value of primal feasibility violation.
-    #                    real_t& cmpl             # Maximum value of complementarity residual.
-    #                    )
+    #void getKktViolation(int_t nV,                # Number of variables.
+    #                     int_t nC,                # Number of constraints.
+    #                     const real_t* const H,   # Hessian matrix.
+    #                     const real_t* const g,   # Sequence of gradient vectors.
+    #                     const real_t* const A,   # Constraint matrix.
+    #                     const real_t* const lb,  # Sequence of lower bound vectors (on variables).
+    #                     const real_t* const ub,  # Sequence of upper bound vectors (on variables).
+    #                     const real_t* const lbA, # Sequence of lower constraints' bound vectors.
+    #                     const real_t* const ubA, # Sequence of upper constraints' bound vectors.
+    #                     const real_t* const x,   # Sequence of primal trial vectors.
+    #                     const real_t* const y,   # Sequence of dual trial vectors.
+    #                     real_t& stat,            # Maximum value of stationarity condition residual.
+    #                     real_t& feas,            # Maximum value of primal feasibility violation.
+    #                     real_t& cmpl             # Maximum value of complementarity residual.
+    #                     )
 
 
 cdef extern from "qpOASES/extras/OQPinterface.hpp" namespace "qpOASES":
-    returnValue runOQPbenchmark(const char* path,           # Full path of the benchmark files (without trailing slash!).
+    returnValue runOqpBenchmark(const char* path,           # Full path of the benchmark files (without trailing slash!).
                                 BooleanType isSparse,       # Shall convert matrices to sparse format before solution?
                                 BooleanType useHotstarts,   # Shall QP solution be hotstarted?
                                 const Options& options,     # QP solver options to be used while solving benchmark problems.
