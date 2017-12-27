@@ -1,0 +1,16 @@
+#option(QPOASES_BUILD_BINDINGS_C "Build C bindings" OFF)
+option(QPOASES_BUILD_BINDINGS_MATLAB "Build matlab bindings" OFF)
+#option(QPOASES_BUILD_BINDINGS_OCTAVE "Build octave bindings" OFF)
+#option(QPOASES_BUILD_BINDINGS_PYTHON "Build python bindings" OFF)
+#option(QPOASES_BUILD_BINDINGS_SCIILAB "Build sciilab bindings" OFF)
+option(QPOASES_BUILD_BINDINGS_SIMULINK "Build simulink bindings" OFF)
+
+if (QPOASES_BUILD_BINDINGS_MATLAB)
+    message(STATUS "Adding MATLAB bindings")
+    add_subdirectory(matlab)
+endif()
+
+if (QPOASES_BUILD_BINDINGS_SIMULINK)
+    message(STATUS "Adding SIMULINK bindings")
+    add_subdirectory(simulink)
+endif()
