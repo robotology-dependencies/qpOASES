@@ -2,7 +2,7 @@
 ##	This file is part of qpOASES.
 ##
 ##	qpOASES -- An Implementation of the Online Active Set Strategy.
-##	Copyright (C) 2007-2015 by Hans Joachim Ferreau, Andreas Potschka,
+##	Copyright (C) 2007-2017 by Hans Joachim Ferreau, Andreas Potschka,
 ##	Christian Kirches et al. All rights reserved.
 ##
 ##	qpOASES is free software; you can redistribute it and/or
@@ -25,10 +25,11 @@
 ##
 ##	Filename:  Makefile
 ##	Author:    Hans Joachim Ferreau
-##	Version:   3.1
-##	Date:      2007-2015
+##	Version:   3.2
+##	Date:      2007-2017
 ##
 
+include make.mk
 
 ##
 ##	targets
@@ -62,7 +63,7 @@ debugging:
 clean:
 	@cd src               && ${MAKE} -s clean
 	@cd examples          && ${MAKE} -s clean
-	@cd bin               && ${RM} -f *.*
+	@cd bin               && ${RM} -f *.* *{EXE}
 	@cd testing/cpp       && ${MAKE} -s clean
 
 #	&& cd src_aw            && ${MAKE} -s clean && cd .. \

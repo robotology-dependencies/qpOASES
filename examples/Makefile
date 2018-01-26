@@ -2,7 +2,7 @@
 ##	This file is part of qpOASES.
 ##
 ##	qpOASES -- An Implementation of the Online Active Set Strategy.
-##	Copyright (C) 2007-2015 by Hans Joachim Ferreau, Andreas Potschka,
+##	Copyright (C) 2007-2017 by Hans Joachim Ferreau, Andreas Potschka,
 ##	Christian Kirches et al. All rights reserved.
 ##
 ##	qpOASES is free software; you can redistribute it and/or
@@ -25,8 +25,8 @@
 ##
 ##	Filename:  examples/Makefile
 ##	Author:    Hans Joachim Ferreau
-##	Version:   3.1
-##	Date:      2007-2015
+##	Version:   3.2
+##	Date:      2007-2017
 ##
 
 include ../make.mk
@@ -48,7 +48,8 @@ QPOASES_EXES = \
 	${BINDIR}/example4${EXE} \
 	${BINDIR}/example5${EXE} \
 	${BINDIR}/exampleLP${EXE} \
-	${BINDIR}/qrecipe${EXE}
+	${BINDIR}/qrecipe${EXE} \
+	${BINDIR}/qrecipeSchur${EXE}
 
 
 ##
@@ -65,6 +66,15 @@ ${BINDIR}/example4${EXE}: example4.${OBJEXT} example4CP.cpp ${LINK_DEPENDS}
 	@${ECHO} "Creating" $@
 	@${CPP} ${DEF_TARGET} ${CPPFLAGS} $< ${QPOASES_LINK} ${LINK_LIBRARIES}
 
+${BINDIR}/qrecipe${EXE}: qrecipe.${OBJEXT} qrecipe_data.hpp ${LINK_DEPENDS}
+	@${ECHO} "Creating" $@
+	@${CPP} ${DEF_TARGET} ${CPPFLAGS} $< ${QPOASES_LINK} ${LINK_LIBRARIES}
+
+${BINDIR}/qrecipeSchur${EXE}: qrecipeSchur.${OBJEXT} qrecipe_data.hpp ${LINK_DEPENDS}
+	@${ECHO} "Creating" $@
+	@${CPP} ${DEF_TARGET} ${CPPFLAGS} $< ${QPOASES_LINK} ${LINK_LIBRARIES}
+
+
 clean:
 	@${ECHO} "Cleaning up (examples)"
 	@${RM} -f *.${OBJEXT} ${QPOASES_EXES}
@@ -78,6 +88,14 @@ ${LINK_DEPENDS}:
 example4.${OBJEXT}: example4.cpp example4CP.cpp
 	@${ECHO} "Creating" $@
 	@${CPP} ${DEF_TARGET} -c ${IFLAGS} ${CPPFLAGS} $<
+
+qrecipe.${OBJEXT}: qrecipe.cpp qrecipe_data.hpp
+	@${ECHO} "Creating" $@
+	@${CPP} ${DEF_TARGET} ${IFLAGS} ${CPPFLAGS} -c $<
+
+qrecipeSchur.${OBJEXT}: qrecipeSchur.cpp qrecipe_data.hpp
+	@${ECHO} "Creating" $@
+	@${CPP} ${DEF_TARGET} ${IFLAGS} ${CPPFLAGS} -c $<
 
 %.${OBJEXT}: %.cpp
 	@${ECHO} "Creating" $@
