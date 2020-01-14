@@ -229,7 +229,7 @@ cmake_policy(SET CMP0057 NEW) # if IN_LIST
 
 set(_FindMatlab_SELF_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
-include(FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 include(CheckCXXCompilerFlag)
 include(CheckCCompilerFlag)
 
